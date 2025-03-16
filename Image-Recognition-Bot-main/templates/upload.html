@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #d0e2f1);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        input[type="file"] {
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="file"]:hover {
+            border-color: #0056b3;
+        }
+        
+        input[type="submit"] {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        h2 {
+            color: #333;
+            margin-top: 20px;
+            font-size: 1.8em;
+        }
+        
+        p {
+            color: #555;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        
+        .image-preview {
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .image-preview img:hover {
+            transform: scale(1.05);
+        }
+        
+        .preview-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload an Image</h1>
+        <form action="/" method="post" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" name="image" accept="image/*" required>
+            <input type="submit" value="Upload">
+        </form>
+
+        {% if result %}
+        <h2>Result:</h2>
+        <p>{{ result }}</p>
+        <div class="image-preview">
+            <h2 class="preview-label">Uploaded Image:</h2>
+            <img src="{{ url_for('static', filename='uploads/' + image_path.split('/')[-1]) }}" alt="Uploaded Image">
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const fileInput = document.querySelector('input[type="file"]');
+        const previewContainer = document.querySelector('.image-preview');
+        
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (!previewContainer.querySelector('img')) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        previewContainer.appendChild(img);
+                    } else {
+                        previewContainer.querySelector('img').src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
